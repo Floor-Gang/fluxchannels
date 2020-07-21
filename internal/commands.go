@@ -89,6 +89,7 @@ func (bot *Bot) cmdList(msg *dg.Message) {
 				list += "Category - " + category.Name
 			}
 			list += "\n"
+			list += fmt.Sprintf("With channel prefix \"%s\"\n", fluxCat.ChannelNamePrefix)
 
 			list += " Parent Channels\n"
 			parents := bot.GetParents(fluxCat)
