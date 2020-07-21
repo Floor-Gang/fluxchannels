@@ -5,17 +5,20 @@ import (
 	util "github.com/Floor-Gang/utilpkg/botutil"
 	dg "github.com/bwmarrin/discordgo"
 	"log"
+	"strings"
 )
 
-// args = [prefix, add, category ID]
+// args = [prefix, add, category ID, channel name prefix...]
 func (bot *Bot) cmdAdd(msg *dg.Message, args []string) {
-	if len(args) < 3 {
-		util.Reply(bot.Client, msg, bot.Config.Prefix+" add <category ID>")
+	if len(args) < 4 {
+		util.Reply(bot.Client, msg, bot.Config.Prefix+" add <category ID> <channel name prefix>")
 		return
 	}
 
 	categoryID := args[2]
 	category, err := bot.Client.Channel(categoryID)
+	channelNamePrefix := strings.Join(args[3:], " ")
+	log.Println(channelNamePrefix)
 
 	if err != nil || category.Type != dg.ChannelTypeGuildCategory {
 		util.Reply(bot.Client, msg, fmt.Sprintf("`%s` isn't an ID of a category.", categoryID))
@@ -37,8 +40,9 @@ func (bot *Bot) cmdAdd(msg *dg.Message, args []string) {
 	}
 
 	fluxCategory := FluxCategory{
-		CategoryID: category.ID,
-		Parents:    parents,
+		CategoryID:        category.ID,
+		Parents:           parents,
+		ChannelNamePrefix: channelNamePrefix,
 	}
 	bot.Config.Categories[category.ID] = fluxCategory
 	if err := bot.Config.Save(); err != nil {

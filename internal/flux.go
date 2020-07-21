@@ -50,10 +50,10 @@ func (bot *Bot) NewChild(category FluxCategory, parents []*dg.Channel, children 
 	)
 
 	if size > 0 {
-		newChild.Name = fmt.Sprintf("%s %d", bot.Config.ChannelNamePrefix, fullSize+1)
+		newChild.Name = fmt.Sprintf("%s %d", category.ChannelNamePrefix, fullSize+1)
 		newChild.Position = children[size-1].Position + 1
 	} else {
-		newChild.Name = fmt.Sprintf("%s %d", bot.Config.ChannelNamePrefix, len(category.Parents)+1)
+		newChild.Name = fmt.Sprintf("%s %d", category.ChannelNamePrefix, len(category.Parents)+1)
 	}
 
 	channel, err := bot.Client.GuildChannelCreateComplex(

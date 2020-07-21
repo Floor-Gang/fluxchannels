@@ -7,10 +7,9 @@ import (
 
 // Config structure.
 type Config struct {
-	Auth              string                  `yaml:"auth_server"`
-	Prefix            string                  `yaml:"prefix"`
-	Categories        map[string]FluxCategory `yaml:"categories"`
-	ChannelNamePrefix string                  `yaml:"channel_name_prefix"`
+	Auth       string                  `yaml:"auth_server"`
+	Prefix     string                  `yaml:"prefix"`
+	Categories map[string]FluxCategory `yaml:"categories"`
 }
 
 const configPath = "./config.yml"

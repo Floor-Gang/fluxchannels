@@ -22,8 +22,9 @@ type Bot struct {
 }
 
 type FluxCategory struct {
-	CategoryID string   `yaml:"category_id"`
-	Parents    []string `yaml:"parents"`
+	ChannelNamePrefix string   `yaml:"channel_name_prefix"`
+	CategoryID        string   `yaml:"category_id"`
+	Parents           []string `yaml:"parents"`
 }
 
 type Capacity struct {
