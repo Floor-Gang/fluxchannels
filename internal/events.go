@@ -8,44 +8,61 @@ import (
 )
 
 func (bot *Bot) onMessage(_ *dg.Session, msg *dg.MessageCreate) {
-	// check if they provided a prefix and they're not a bot
 	if msg.Author.Bot || !strings.HasPrefix(msg.Content, bot.Config.Prefix) {
 		return
 	}
 
-	// we can ask the authentication server if they're an admin of the bot
-	// isAdmin defaults to "false" if err is not nil
-	isAdmin, err := bot.Auth.CheckMember(msg.Author.ID)
-
-	// let's split their message up into arguments
-	// args = [prefix, sub-command name]
-	args := strings.Fields(msg.Content)
-
-	if len(args) < 2 { // this would mean args is [prefix] which at that point ignore them
+	if msg.GuildID != bot.Serving {
 		return
 	}
 
-	// we can now find out what command they were calling
-	switch args[1] {
-	case "ping":
-		bot.cmdPing(msg.Message)
-		break
-	case "some-admin-command":
-		// if all your commands are admin-relate then just wrap the whole switch statement
-		// with this if statement
+	isAdmin, _ := bot.Auth.CheckMember(msg.Author.ID)
+	// args = [prefix, sub-command]
+	args := strings.Fields(msg.Content)
 
-		// you can also just do "if isAdmin", the error doesn't matter that much if you want cleaner
-		// code.
-		if err != nil {
-			util.Reply(bot.Client, msg.Message, "Failed to contact auth server")
-		} else if isAdmin {
-			bot.cmdSomethingAdmin(msg.Message)
-		} else {
-			util.Reply(bot.Client, msg.Message, "You must be an admin to run this command.")
+	if len(args) < 2 {
+		return
+	}
+
+	if isAdmin {
+		switch args[1] {
+		case "add":
+			bot.cmdAdd(msg.Message, args)
+			break
+		case "remove":
+			bot.cmdRemove(msg.Message, args)
+			break
+		case "list":
+			bot.cmdList(msg.Message)
+			break
 		}
+	} else {
+		util.Reply(bot.Client, msg.Message, "You must be an administrator to run this command")
 	}
 }
 
 func (bot *Bot) onReady(_ *dg.Session, ready *dg.Ready) {
-	log.Printf("<Bot/Feature Name> - ready as %s#%s", ready.User.Username, ready.User.Discriminator)
+	log.Printf("Flux Channels - ready as %s#%s", ready.User.Username, ready.User.Discriminator)
+	for _, category := range bot.Config.Categories {
+		bot.CheckFluxCategory(category)
+	}
+}
+
+func (bot *Bot) onVoiceUpdate(_ *dg.Session, voice *dg.VoiceStateUpdate) {
+	if oldState, isOK := bot.OldVoiceState[voice.UserID]; isOK {
+		bot.checkState(oldState)
+	}
+	bot.OldVoiceState[voice.UserID] = voice.VoiceState
+
+	bot.checkState(voice.VoiceState)
+}
+
+func (bot *Bot) checkState(state *dg.VoiceState) {
+	channel, err := bot.Client.State.Channel(state.ChannelID)
+	if err != nil {
+		return
+	}
+	if category, isOK := bot.Config.Categories[channel.ParentID]; isOK {
+		bot.CheckFluxCategory(category)
+	}
 }

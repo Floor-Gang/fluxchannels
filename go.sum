@@ -1,5 +1,7 @@
 github.com/Floor-Gang/authclient v0.0.0-20200719194041-98ec9517f9b8 h1:5ml3rJsLbtmqem9Y0W0v/0ebYZ+QxW0n6n/c/u02zHE=
 github.com/Floor-Gang/authclient v0.0.0-20200719194041-98ec9517f9b8/go.mod h1:I0qmN/m/+qKnJmJXk81OTW3shZxZw9K8u+Mz4Ke8fCM=
+github.com/Floor-Gang/authclient v0.0.0-20200720232352-9a544e5e8748 h1:Be7Z0H9q9RtSNBgJl9ciMHut+FNpW0hqaWYY9rHcGjg=
+github.com/Floor-Gang/authclient v0.0.0-20200720232352-9a544e5e8748/go.mod h1:I0qmN/m/+qKnJmJXk81OTW3shZxZw9K8u+Mz4Ke8fCM=
 github.com/Floor-Gang/utilpkg v0.0.0-20200716233434-648d6cfa3b9a h1:8Frn0BJds5573/EcJMpIZU2E2/pV9FOppCWHzBz+3hM=
 github.com/Floor-Gang/utilpkg v0.0.0-20200716233434-648d6cfa3b9a/go.mod h1:YGMhgcYTkgeexqN0A4t3fP9MBFF+IFEY0sjFcM7Q6Ko=
 github.com/PuerkitoBio/goquery v1.5.1/go.mod h1:GsLWisAFVj4WgDibEWF4pvYnkVQBpKBKeU+7zCJoLcc=
