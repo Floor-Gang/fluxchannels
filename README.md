@@ -1,26 +1,25 @@
-Notes to developers:
- * Replace everything with `< ... >` with the required data
- * Replace init-discord-bot with a feature / bot name
- * Remove all these notes
-# <Feature/Bot Name>
-
+# Flux Channels
 ## Setup
 Download [Go](https://golang.org)
 ```shell script
-$ git clone <repository url>
+$ git clone https://github.com/Floor-Gang/fluxchannels
 $ go mod download
-$ cd ./cmd/init-discord-bot
+$ cd ./cmd/fluxchannels
 $ go build
-$ ./init-discord-bot
+$ ./fluxchannels
 # ... edit config.yml ...
-$ ./init-discord-bot
+$ ./fluxchannels
 ```
  
 ## Bot Usage
-List your commands here and describe each one
+To get an ID of a category enable "developer mode" in appearance settings of
+your Discord client. Then right click the category name and click "Copy ID."
 
-\<To do this>:
- * Do this step first then
- * run `.prefix command <arg 1> <arg 2>`
- 
-... and so on ...
+To add a new fluctuating category:
+ * `.flux add <category ID>`
+
+To remove a fluctuating category:
+ * `.flux remove <category ID>`
+
+To list all the fluctuating categories:
+ * `.flux list`
