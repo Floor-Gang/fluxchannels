@@ -7,11 +7,30 @@ import (
 	"log"
 )
 
+const (
+	maxParentCapacity = 1
+	maxChildCapacity  = 1
+)
+
 // Bot structure
 type Bot struct {
-	Auth   *auth.AuthClient
-	Client *dg.Session
-	Config *Config
+	Auth          *auth.AuthClient
+	Client        *dg.Session
+	Config        *Config
+	Serving       string // The guild we're serving
+	OldVoiceState map[string]*dg.VoiceState
+}
+
+type FluxCategory struct {
+	CategoryID string   `yaml:"category_id"`
+	Parents    []string `yaml:"parents"`
+}
+
+type Capacity struct {
+	Members []string
+	IsFull  bool
+	IsEmpty bool
+	Channel *dg.Channel
 }
 
 // Start starts discord client, configuration and database
@@ -32,13 +51,23 @@ func Start() {
 
 	register, err := authClient.Register(
 		auth.Feature{
-			Name:        "", // Give this bot / feature a name
-			Description: "", // Describe what this bot is doing
-			Commands: []auth.SubCommand{ // list all the commands this bot / feature has
+			Name:        "Flux Channels",
+			Description: "Resize the number of voice channels in a category based on capacity",
+			Commands: []auth.SubCommand{
 				{
-					Name:        "",           // Command name like "add"
-					Description: "",           // Describe what the command does
-					Example:     []string{""}, // [command name, argument 1, argument 2] like [add, #channel, #channel]
+					Name:        "add",
+					Description: "Add another category to resize automatically",
+					Example:     []string{"add", "category ID"},
+				},
+				{
+					Name:        "remove",
+					Description: "Remove a fluctuating category",
+					Example:     []string{"remove", "category ID"},
+				},
+				{
+					Name:        "list",
+					Description: "List all the fluctuating categories",
+					Example:     []string{"list"},
 				},
 			},
 			CommandPrefix: config.Prefix,
@@ -56,15 +85,35 @@ func Start() {
 	}
 
 	bot := Bot{
-		Auth:   &authClient,
-		Client: client,
-		Config: &config,
+		Auth:          &authClient,
+		Client:        client,
+		Config:        &config,
+		Serving:       register.Serving,
+		OldVoiceState: make(map[string]*dg.VoiceState),
 	}
 
-	client.AddHandlerOnce(bot.onReady) // This will call onReady only once
-	client.AddHandler(bot.onMessage)   // This will catch all the new messages that the bot can see
+	client.AddHandler(bot.onVoiceUpdate)
+	client.AddHandler(bot.onMessage)
+	client.AddHandlerOnce(bot.onReady)
 
 	if err = client.Open(); err != nil {
 		util.Report("Was an authentication token provided?", err)
 	}
+}
+
+func (bot *Bot) GetMembersOfVC(voiceID string) (members []string) {
+	guild, err := bot.Client.State.Guild(bot.Serving)
+
+	if err != nil {
+		log.Println("Failed to get serving guild " + bot.Serving)
+		return
+	}
+
+	for _, voiceState := range guild.VoiceStates {
+		if voiceState.ChannelID == voiceID {
+			members = append(members, voiceState.UserID)
+		}
+	}
+
+	return members
 }
