@@ -7,8 +7,10 @@ import (
 
 // Config structure.
 type Config struct {
-	Auth   string `yaml:"auth_server"`
-	Prefix string `yaml:"prefix"`
+	Auth              string                  `yaml:"auth_server"`
+	Prefix            string                  `yaml:"prefix"`
+	Categories        map[string]FluxCategory `yaml:"categories"`
+	ChannelNamePrefix string                  `yaml:"channel_name_prefix"`
 }
 
 const configPath = "./config.yml"
@@ -16,7 +18,8 @@ const configPath = "./config.yml"
 // GetConfig retrieves a configuration.
 func GetConfig() Config {
 	config := Config{
-		Prefix: ".<command name>",
+		Prefix:     ".flux",
+		Categories: make(map[string]FluxCategory),
 	}
 	err := utilConfig.GetConfig(configPath, &config)
 
@@ -28,8 +31,6 @@ func GetConfig() Config {
 }
 
 // Save saves configuration
-func (config *Config) Save() {
-	if err := utilConfig.Save(configPath, config); err != nil {
-		log.Println("Failed to save config", err)
-	}
+func (config *Config) Save() error {
+	return utilConfig.Save(configPath, config)
 }
