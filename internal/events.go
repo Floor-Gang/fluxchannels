@@ -16,7 +16,7 @@ func (bot *Bot) onMessage(_ *dg.Session, msg *dg.MessageCreate) {
 		return
 	}
 
-	isAdmin, _ := bot.Auth.CheckMember(msg.Author.ID)
+	isAdmin, _ := bot.Auth.Verify(msg.Author.ID)
 	// args = [prefix, sub-command]
 	args := strings.Fields(msg.Content)
 
@@ -37,7 +37,11 @@ func (bot *Bot) onMessage(_ *dg.Session, msg *dg.MessageCreate) {
 			break
 		}
 	} else {
-		util.Reply(bot.Client, msg.Message, "You must be an administrator to run this command")
+		_, _ = util.Reply(
+			bot.Client,
+			msg.Message,
+			"You must be an administrator to run this command",
+		)
 	}
 }
 

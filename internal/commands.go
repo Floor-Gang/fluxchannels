@@ -11,7 +11,7 @@ import (
 // args = [prefix, add, category ID, channel name prefix...]
 func (bot *Bot) cmdAdd(msg *dg.Message, args []string) {
 	if len(args) < 4 {
-		util.Reply(bot.Client, msg, bot.Config.Prefix+" add <category ID> <channel name prefix>")
+		_, _ = util.Reply(bot.Client, msg, bot.Config.Prefix+" add <category ID> <channel name prefix>")
 		return
 	}
 
@@ -21,7 +21,7 @@ func (bot *Bot) cmdAdd(msg *dg.Message, args []string) {
 	log.Println(channelNamePrefix)
 
 	if err != nil || category.Type != dg.ChannelTypeGuildCategory {
-		util.Reply(bot.Client, msg, fmt.Sprintf("`%s` isn't an ID of a category.", categoryID))
+		_, _ = util.Reply(bot.Client, msg, fmt.Sprintf("`%s` isn't an ID of a category.", categoryID))
 		return
 	}
 
@@ -46,16 +46,16 @@ func (bot *Bot) cmdAdd(msg *dg.Message, args []string) {
 	}
 	bot.Config.Categories[category.ID] = fluxCategory
 	if err := bot.Config.Save(); err != nil {
-		util.Reply(bot.Client, msg, "Failed to add category, something went wrong.")
+		_, _ = util.Reply(bot.Client, msg, "Failed to add category, something went wrong.")
 		log.Println(err)
 	} else {
-		util.Reply(bot.Client, msg, result)
+		_, _ = util.Reply(bot.Client, msg, result)
 	}
 }
 
 func (bot *Bot) cmdRemove(msg *dg.Message, args []string) {
 	if len(args) < 3 {
-		util.Reply(bot.Client, msg, bot.Config.Prefix+" remove <category ID>")
+		_, _ = util.Reply(bot.Client, msg, bot.Config.Prefix+" remove <category ID>")
 		return
 	}
 
@@ -63,16 +63,16 @@ func (bot *Bot) cmdRemove(msg *dg.Message, args []string) {
 	category, isOK := bot.Config.Categories[categoryID]
 
 	if !isOK {
-		util.Reply(bot.Client, msg, fmt.Sprintf("`%s` isn't an ID of a category.", categoryID))
+		_, _ = util.Reply(bot.Client, msg, fmt.Sprintf("`%s` isn't an ID of a category.", categoryID))
 		return
 	}
 
 	delete(bot.Config.Categories, category.CategoryID)
 	if err := bot.Config.Save(); err != nil {
-		util.Reply(bot.Client, msg, "Failed to remove category, something went wrong.")
+		_, _ = util.Reply(bot.Client, msg, "Failed to remove category, something went wrong.")
 		log.Println(err)
 	} else {
-		util.Reply(bot.Client, msg, "Removed category.")
+		_, _ = util.Reply(bot.Client, msg, "Removed category.")
 	}
 }
 
@@ -116,5 +116,5 @@ func (bot *Bot) cmdList(msg *dg.Message) {
 		list += "There aren't any!"
 	}
 
-	util.Reply(bot.Client, msg, list)
+	_, _ = util.Reply(bot.Client, msg, list)
 }
