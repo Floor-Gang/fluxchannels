@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/Floor-Gang/init-discord-bot/internal"
+	"github.com/Floor-Gang/fluxchannels/internal"
 	util "github.com/Floor-Gang/utilpkg"
 )
 

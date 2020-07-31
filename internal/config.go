@@ -8,6 +8,8 @@ import (
 // Config structure.
 type Config struct {
 	Auth       string                  `yaml:"auth_server"`
+	Token      string                  `yaml:"token"`
+	Guild      string                  `yaml:"guild"`
 	Prefix     string                  `yaml:"prefix"`
 	Categories map[string]FluxCategory `yaml:"categories"`
 }

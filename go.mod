@@ -1,9 +1,9 @@
-module github.com/Floor-Gang/init-discord-bot
+module github.com/Floor-Gang/fluxchannels
 
 go 1.14
 
 require (
-	github.com/Floor-Gang/authclient v0.0.0-20200720232352-9a544e5e8748
-	github.com/Floor-Gang/utilpkg v0.0.0-20200716233434-648d6cfa3b9a
-	github.com/bwmarrin/discordgo v0.21.1
+	github.com/Floor-Gang/authclient v0.0.0-20200731095157-bb72a661d9be
+	github.com/Floor-Gang/utilpkg v0.0.0-20200719193634-87559dd8f78a
+	github.com/bwmarrin/discordgo v0.22.0
 )

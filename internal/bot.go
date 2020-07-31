@@ -50,7 +50,7 @@ func Start() {
 		log.Fatalln("Failed to connect to authentication server", err)
 	}
 
-	register, err := authClient.Register(
+	_, err = authClient.Register(
 		auth.Feature{
 			Name:        "Flux Channels",
 			Description: "Resize the number of voice channels in a category based on capacity",
@@ -79,7 +79,7 @@ func Start() {
 		log.Fatalln("Failed to register with authentication server", err)
 	}
 
-	client, err := dg.New(register.Token)
+	client, err := dg.New("Bot " + config.Token)
 
 	if err != nil {
 		panic(err)
@@ -89,7 +89,7 @@ func Start() {
 		Auth:          &authClient,
 		Client:        client,
 		Config:        &config,
-		Serving:       register.Serving,
+		Serving:       config.Guild,
 		OldVoiceState: make(map[string]*dg.VoiceState),
 	}
 
